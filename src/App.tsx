@@ -8,7 +8,6 @@ import Button from '@mui/material/Button';
 import { Web3Storage } from 'web3.storage';
 import abi from './contracts/abi.js';
 import address from './contracts/address';
-import { getDefaultProvider } from "@ethersproject/providers";
 
 function App() {
 
@@ -100,16 +99,18 @@ function App() {
     const provider = await web3auth.connect();
     // TODO: add this provider to web3/ethers
 
+    new ethers.providers.Web3Provider(web3auth.provider); 
+
     /*
 
     J'ai essayé ça : 
 
-    const x = new ethers.providers.Web3Provider(provider); 
+    const x = await new ethers.providers.Web3Provider(web3auth.provider);
 
     Mais j'obtiens cette erreur : 
      
     "L'argument de type 'SafeEventEmitterProvider | null' n'est pas attribuable au paramètre de type 'ExternalProvider | JsonRpcFetchFunc'.
-    Impossible d'assigner le type 'null' au type 'ExternalProvider | JsonRpcFetchFunc'.ts(2345)""
+  Impossible d'assigner le type 'null' au type 'ExternalProvider | JsonRpcFetchFunc'.ts(2345)"
 
     */
 
