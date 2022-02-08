@@ -10,6 +10,7 @@ import { Web3Storage } from 'web3.storage'
 function App() {
 
   function getAccessToken() {
+    console.log("process.env.REACT_APP_WEB3STORAGE_TOKEN: ", process.env.REACT_APP_WEB3STORAGE_TOKEN);
     // Get your own API token at https://web3.storage/account/
     return process.env.REACT_APP_WEB3STORAGE_TOKEN;
   }
@@ -56,9 +57,11 @@ function App() {
       tickerName: "matic",
     };
 
+    // console.log("web3authId: ", process.env.REACT_APP_WEB3AUTH_CLIENT_ID);
+
     const web3auth = new Web3Auth({
       chainConfig: polygonMumbaiConfig,
-      clientId: "BBjCfTJZgWe5TGx2WNnozJ4aPQEitgYBJoqJAv50bdh6nocRyNwAa0iUs0kOVLqJiTBou963d1SKR8soHy2z-VE",
+      clientId: process.env.REACT_APP_WEB3AUTH_CLIENT_ID!,
     });
 
     setWeb3auth(web3auth);
