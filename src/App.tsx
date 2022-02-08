@@ -8,6 +8,7 @@ import Button from '@mui/material/Button';
 import { Web3Storage } from 'web3.storage';
 import abi from './contracts/abi.js';
 import address from './contracts/address';
+import { getDefaultProvider } from "@ethersproject/providers";
 
 function App() {
 
@@ -20,9 +21,18 @@ function App() {
   }
   getAccessToken()
 
+
+
+
+
+
   const [user, setUser] = useState(null);
   const [web3auth, setWeb3auth] = useState<Web3Auth | null>(null);
   const [loaded, setLoaded] = useState(false);
+
+
+
+
 
   useEffect(() => {
     console.log("useEffect");
@@ -79,10 +89,30 @@ function App() {
     initializeModal();
   }, []);
 
+
+
+
+
+
+
   const login = async () => {
     if (!web3auth) return;
     const provider = await web3auth.connect();
     // TODO: add this provider to web3/ethers
+
+    /*
+
+    J'ai essayé ça : 
+
+    const x = new ethers.providers.Web3Provider(provider); 
+
+    Mais j'obtiens cette erreur : 
+     
+    "L'argument de type 'SafeEventEmitterProvider | null' n'est pas attribuable au paramètre de type 'ExternalProvider | JsonRpcFetchFunc'.
+    Impossible d'assigner le type 'null' au type 'ExternalProvider | JsonRpcFetchFunc'.ts(2345)""
+
+    */
+
   };
   const logout = async () => {
     if (!web3auth) return;
@@ -105,6 +135,7 @@ function App() {
   };
 
   const renderAuthenticated = () => {
+
     return (
       <div className="App">
         <Button className="app-link" onClick={logout}>
@@ -113,6 +144,17 @@ function App() {
         <Button className="app-link" onClick={getUserInfo}>
           Log user info
         </Button>
+        <div className="Main">
+          <p>
+            Hello Web3Auth! 
+          </p>
+          
+             
+          
+          <Button className="app-link" onClick={getUserInfo}>
+          Go! 
+        </Button>
+        </div>      
       </div>
     );
   };
