@@ -1,12 +1,3 @@
-## @project/contracts
-
-A minimalist, opinionated structure for managing smart contract ABIs and addresses.
-
-[Read more about Application Binary Interfaces (ABIs) here](https://ethereum.stackexchange.com/questions/234/what-is-an-abi-and-why-is-it-needed-to-interact-with-contracts).
-
-
-// https://rinkeby.etherscan.io/address/0x54832AB8647B6F0a754Bd8147DA33ea4c59f8454
-
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.2;
 
@@ -18,7 +9,13 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
 /// @custom:security-contact julien@strat.cc
-contract LodeRunner is ERC721, ERC721Enumerable, ERC721URIStorage, ERC721Burnable, Ownable {
+contract LodeRunner is
+    ERC721,
+    ERC721Enumerable,
+    ERC721URIStorage,
+    ERC721Burnable,
+    Ownable
+{
     using Counters for Counters.Counter;
 
     Counters.Counter private _tokenIdCounter;
@@ -29,7 +26,7 @@ contract LodeRunner is ERC721, ERC721Enumerable, ERC721URIStorage, ERC721Burnabl
         return "https://ipfs.io/ipfs/";
     }
 
-    function safeMint(address to, string memory uri) public onlyOwner {
+    function safeMint(address to, string memory uri) public {
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
         _safeMint(to, tokenId);
@@ -38,14 +35,18 @@ contract LodeRunner is ERC721, ERC721Enumerable, ERC721URIStorage, ERC721Burnabl
 
     // The following functions are overrides required by Solidity.
 
-    function _beforeTokenTransfer(address from, address to, uint256 tokenId)
-        internal
-        override(ERC721, ERC721Enumerable)
-    {
+    function _beforeTokenTransfer(
+        address from,
+        address to,
+        uint256 tokenId
+    ) internal override(ERC721, ERC721Enumerable) {
         super._beforeTokenTransfer(from, to, tokenId);
     }
 
-    function _burn(uint256 tokenId) internal override(ERC721, ERC721URIStorage) {
+    function _burn(uint256 tokenId)
+        internal
+        override(ERC721, ERC721URIStorage)
+    {
         super._burn(tokenId);
     }
 

@@ -5,9 +5,14 @@ import { LOGIN_MODAL_EVENTS } from "@web3auth/ui";
 import { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import Button from '@mui/material/Button';
-import { Web3Storage } from 'web3.storage'
+import { Web3Storage } from 'web3.storage';
+import abi from './contracts/abi.js';
+import address from './contracts/address';
 
 function App() {
+
+  console.log("abi:", abi);
+  console.log("address:", address.lodeRunner);
 
   function getAccessToken() {
     // Get your own API token at https://web3.storage/account/
