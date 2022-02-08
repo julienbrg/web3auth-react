@@ -10,7 +10,6 @@ import { Web3Storage } from 'web3.storage'
 function App() {
 
   function getAccessToken() {
-    console.log("process.env.REACT_APP_WEB3STORAGE_TOKEN: ", process.env.REACT_APP_WEB3STORAGE_TOKEN);
     // Get your own API token at https://web3.storage/account/
     return process.env.REACT_APP_WEB3STORAGE_TOKEN;
   }
@@ -56,8 +55,6 @@ function App() {
       ticker: "matic",
       tickerName: "matic",
     };
-
-    // console.log("web3authId: ", process.env.REACT_APP_WEB3AUTH_CLIENT_ID);
 
     const web3auth = new Web3Auth({
       chainConfig: polygonMumbaiConfig,
