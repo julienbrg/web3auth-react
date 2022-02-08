@@ -96,10 +96,11 @@ function App() {
 
   const login = async () => {
     if (!web3auth) return;
-    // const provider = await web3auth.connect();
+    const provider = await web3auth.connect();
+
     // TODO: add this provider to web3/ethers 
 
-    const provider = await new ethers.providers.Web3Provider(web3auth.provider);
+    const addEthers = await new ethers.providers.Web3Provider(provider);
 
     /*
 
