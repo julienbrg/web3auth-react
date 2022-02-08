@@ -96,21 +96,17 @@ function App() {
 
   const login = async () => {
     if (!web3auth) return;
-    const provider = await web3auth.connect();
-    // TODO: add this provider to web3/ethers
+    // const provider = await web3auth.connect();
+    // TODO: add this provider to web3/ethers 
 
-    new ethers.providers.Web3Provider(web3auth.provider); 
+    const provider = await new ethers.providers.Web3Provider(web3auth.provider);
 
     /*
 
-    J'ai essayé ça : 
+    I get this error: 
 
-    const x = await new ethers.providers.Web3Provider(web3auth.provider);
-
-    Mais j'obtiens cette erreur : 
-     
-    "L'argument de type 'SafeEventEmitterProvider | null' n'est pas attribuable au paramètre de type 'ExternalProvider | JsonRpcFetchFunc'.
-  Impossible d'assigner le type 'null' au type 'ExternalProvider | JsonRpcFetchFunc'.ts(2345)"
+    Argument of type 'SafeEventEmitterProvider | null' is not assignable to parameter of type 'ExternalProvider | JsonRpcFetchFunc'.
+    Type 'null' is not assignable to type 'ExternalProvider | JsonRpcFetchFunc'.
 
     */
 
