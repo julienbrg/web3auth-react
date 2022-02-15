@@ -11,8 +11,8 @@ import address from './contracts/address';
 
 function App() {
 
-  console.log("abi:", abi);
-  console.log("address:", address.lodeRunner);
+  // console.log("abi:", abi);
+  // console.log("address:", address.lodeRunner);
 
   function getAccessToken() {
     // Get your own API token at https://web3.storage/account/
@@ -28,9 +28,8 @@ function App() {
   const [user, setUser] = useState(null);
   const [web3auth, setWeb3auth] = useState<Web3Auth | null>(null);
   const [loaded, setLoaded] = useState(false);
-
-
-
+  const [signer, setSigner] = useState("");
+  const [userFace, setUserFace] = useState("");
 
 
   useEffect(() => {
@@ -62,12 +61,12 @@ function App() {
 
     const polygonMumbaiConfig = {
       chainNamespace: CHAIN_NAMESPACES.EIP155,
-      rpcTarget: "https://rpc-mumbai.maticvigil.com",
-      blockExplorer: "https://mumbai-explorer.matic.today",
-      chainId: "0x13881",
-      displayName: "Polygon Mumbai Testnet",
-      ticker: "matic",
-      tickerName: "matic",
+        chainId: "0x3",
+        rpcTarget: `https://ropsten.infura.io/v3/${"e54d5dcc498c4a028f10cde6ab16cf89"}`,
+        displayName: "ropsten",
+        blockExplorer: "https://ropsten.etherscan.io/",
+        ticker: "ETH",
+        tickerName: "Ethereum",
     };
 
     const web3auth = new Web3Auth({
@@ -98,20 +97,18 @@ function App() {
     if (!web3auth) return;
     const provider = await web3auth.connect();
 
-    // TODO: add this provider to web3/ethers 
+    // With Ethers.js
+    const addEthers = new ethers.providers.Web3Provider(provider as any);
+    const accounts = await addEthers.listAccounts();
+    const userAddress = accounts[0];
 
-    const addEthers = await new ethers.providers.Web3Provider(provider);
+    // With Web3
+    // ...
 
-    /*
-
-    I get this error: 
-
-    Argument of type 'SafeEventEmitterProvider | null' is not assignable to parameter of type 'ExternalProvider | JsonRpcFetchFunc'.
-    Type 'null' is not assignable to type 'ExternalProvider | JsonRpcFetchFunc'.
-
-    */
+    setSigner(userAddress);
 
   };
+
   const logout = async () => {
     if (!web3auth) return;
     await web3auth.logout();
@@ -119,7 +116,11 @@ function App() {
   const getUserInfo = async () => {
     if (!web3auth) return;
     const userInfo = await web3auth.getUserInfo();
+    setUserFace(userInfo.profileImage as any);
     console.log(userInfo);
+
+    login();
+
   };
 
   const renderUnauthenticated = () => {
@@ -146,8 +147,26 @@ function App() {
           <p>
             Hello Web3Auth! 
           </p>
-          
-             
+
+          {signer &&
+
+            <p>
+            This is your Ethereum address: <strong>{signer}</strong>.
+            < br/> It is linked to your Google account.< br />
+            </p>
+
+          }
+
+          {userFace &&
+
+            <p>
+
+            And this is your profile image: < br/>< br/>
+            <img src={userFace} alt="face" />
+
+            </p>
+
+          }
           
           <Button className="app-link" onClick={getUserInfo}>
           Go! 
