@@ -29,8 +29,6 @@ function App() {
   const [web3auth, setWeb3auth] = useState<Web3Auth | null>(null);
   const [loaded, setLoaded] = useState(false);
   const [signer, setSigner] = useState("");
-  const [userFace, setUserFace] = useState("");
-
 
   useEffect(() => {
     console.log("useEffect");
@@ -89,10 +87,6 @@ function App() {
 
 
 
-
-
-
-
   const login = async () => {
     if (!web3auth) return;
     const provider = await web3auth.connect();
@@ -116,11 +110,8 @@ function App() {
   const getUserInfo = async () => {
     if (!web3auth) return;
     const userInfo = await web3auth.getUserInfo();
-    setUserFace(userInfo.profileImage as any);
     console.log(userInfo);
-
     login();
-
   };
 
   const renderUnauthenticated = () => {
@@ -153,17 +144,6 @@ function App() {
             <p>
             This is your Ethereum address: <strong>{signer}</strong>.
             < br/> It is linked to your Google account.< br />
-            </p>
-
-          }
-
-          {userFace &&
-
-            <p>
-
-            And this is your profile image: < br/>< br/>
-            <img src={userFace} alt="face" />
-
             </p>
 
           }
