@@ -3,11 +3,12 @@ import { Web3Auth } from "@web3auth/web3auth";
 import { ADAPTER_EVENTS, CHAIN_NAMESPACES } from "@web3auth/base";
 import { LOGIN_MODAL_EVENTS } from "@web3auth/ui";
 import { useEffect, useState } from "react";
-import { ethers } from "ethers";
+import { ethers, /* getDefaultProvider */ } from "ethers";
 import Button from '@mui/material/Button';
 import { Web3Storage } from 'web3.storage';
-import abi from './contracts/abi.js';
+import loderunnerAbi from './contracts/abi.js';
 import address from './contracts/address';
+// import Web3 from "web3";
 
 function App() {
 
@@ -20,15 +21,11 @@ function App() {
   }
   getAccessToken()
 
-
-
-
-
-
   const [user, setUser] = useState(null);
   const [web3auth, setWeb3auth] = useState<Web3Auth | null>(null);
   const [loaded, setLoaded] = useState(false);
   const [signer, setSigner] = useState("");
+  const [txBeingSent, setTxBeingSent] = useState(false);
 
   useEffect(() => {
     console.log("useEffect");
@@ -57,18 +54,18 @@ function App() {
       });
     };
 
-    const polygonMumbaiConfig = {
+    const rinkebyConfig = {
       chainNamespace: CHAIN_NAMESPACES.EIP155,
-        chainId: "0x3",
-        rpcTarget: `https://ropsten.infura.io/v3/${"e54d5dcc498c4a028f10cde6ab16cf89"}`,
-        displayName: "ropsten",
-        blockExplorer: "https://ropsten.etherscan.io/",
+        chainId: "0x4",
+        rpcTarget: `https://rinkeby.infura.io/v3/${process.env.REACT_APP_INFURA_ID}`,
+        displayName: "rinkeby",
+        blockExplorer: "https://rinkeby.etherscan.io/",
         ticker: "ETH",
         tickerName: "Ethereum",
     };
 
     const web3auth = new Web3Auth({
-      chainConfig: polygonMumbaiConfig,
+      chainConfig: rinkebyConfig,
       clientId: process.env.REACT_APP_WEB3AUTH_CLIENT_ID!,
     });
 
@@ -85,8 +82,6 @@ function App() {
     initializeModal();
   }, []);
 
-
-
   const login = async () => {
     if (!web3auth) return;
     const provider = await web3auth.connect();
@@ -95,9 +90,6 @@ function App() {
     const addEthers = new ethers.providers.Web3Provider(provider as any);
     const accounts = await addEthers.listAccounts();
     const userAddress = accounts[0];
-
-    // With Web3
-    // ...
 
     setSigner(userAddress);
 
@@ -112,6 +104,41 @@ function App() {
     const userInfo = await web3auth.getUserInfo();
     console.log(userInfo);
     login();
+  };
+
+  const call = async () => {
+    
+    try {
+    
+      if (!web3auth) return;
+      
+      const provider = await web3auth.connect();
+
+      // With Ethers.js
+      const addEthers = new ethers.providers.Web3Provider(provider as any);
+      const accounts = await addEthers.listAccounts();
+      const userAddress = accounts[0];
+
+      setTxBeingSent(true);
+      const signer = addEthers.getSigner(0);
+
+      const loderunner = new ethers.Contract(address.lodeRunner, loderunnerAbi, signer);
+      const uri = "bafkreib23kegjhehve76nczruvq5xixyxooe5yu2k6wtyg3meqs2dinoti";
+
+      const receipt = loderunner.safeMint(userAddress, uri);
+
+      // const receipt = await call.wait();
+
+      if (receipt.status === 0) {
+        throw new Error("Failed");
+      }
+
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setTxBeingSent(false);      
+    }
+    
   };
 
   const renderUnauthenticated = () => {
@@ -147,8 +174,16 @@ function App() {
             </p>
 
           }
+
+          {txBeingSent &&
+
+          <p>
+          Loading... < br />
+          </p>
+
+          }
           
-          <Button className="app-link" onClick={getUserInfo}>
+          <Button className="app-link" onClick={call}>
           Go! 
         </Button>
         </div>      

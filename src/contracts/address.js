@@ -1,5 +1,5 @@
 const address = {
-    lodeRunner: "0x0a0daaf7edf2568b3ac1ebd5269bca5acfddf8fe"
+    lodeRunner: "0x0A0DAaf7EDf2568B3aC1ebd5269bcA5ACfddF8FE"
   };
   
   export default address;
