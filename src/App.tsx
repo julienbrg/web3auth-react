@@ -12,9 +12,6 @@ import address from './contracts/address';
 
 function App() {
 
-  // console.log("abi:", abi);
-  // console.log("address:", address.lodeRunner);
-
   function getAccessToken() {
     // Get your own API token at https://web3.storage/account/
     return process.env.REACT_APP_WEB3STORAGE_TOKEN;
@@ -92,6 +89,9 @@ function App() {
     const userAddress = accounts[0];
 
     setSigner(userAddress);
+    console.log("provider: ", provider);
+    console.log("addEthers: ", addEthers);
+    console.log("web3auth: ", web3auth);
 
   };
 
@@ -119,15 +119,36 @@ function App() {
       const accounts = await addEthers.listAccounts();
       const userAddress = accounts[0];
 
+      
+
+
       setTxBeingSent(true);
       const signer = addEthers.getSigner(0);
+      const signerAddr = await signer.getAddress();
+      console.log("signer address: ", signerAddr);
+      console.log("signer: ", signer);
+
+      const userBalRaw = await signer.getBalance();
+      const userBal = ethers.utils.formatEther(ethers.BigNumber.from(userBalRaw));
+      console.log("userBal: ", userBal);
+
+      const tx = signer.sendTransaction({
+        to: "0x8CCbFaAe6BC02a73BBe8d6d8017cC8313E4C90A7",
+        value: ethers.utils.parseEther("0.01")
+    });
+
+    // https://docs.ethers.io/v5/getting-started/#getting-started--querying
 
       const loderunner = new ethers.Contract(address.lodeRunner, loderunnerAbi, signer);
       const uri = "bafkreib23kegjhehve76nczruvq5xixyxooe5yu2k6wtyg3meqs2dinoti";
 
-      const receipt = loderunner.safeMint(userAddress, uri);
+      const receipt = await loderunner.tokenURI(18);
 
-      // const receipt = await call.wait();
+      const receipt2 = await loderunner.safeMint(signerAddr, uri);
+
+      console.log("receipt: ", receipt);
+      console.log("receipt2: ", receipt2);
+
 
       if (receipt.status === 0) {
         throw new Error("Failed");
